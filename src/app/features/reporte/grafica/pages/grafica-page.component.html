@@ -1,0 +1,29 @@
+<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+  <h3 class="text-2xl font-bold text-gray-700">Gráficas</h3>
+</div>
+
+<div class="bg-white shadow rounded-lg p-4 mb-6 flex flex-col md:flex-row md:items-end md:gap-4 gap-3">
+  <div class="flex flex-col">
+    <label class="text-sm font-medium text-gray-700 mb-1">Fecha Inicio</label>
+    <input type="date" [(ngModel)]="fechaInicio" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+  </div>
+
+  <div class="flex flex-col">
+    <label class="text-sm font-medium text-gray-700 mb-1">Fecha Fin</label>
+    <input type="date" [(ngModel)]="fechaFin" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+  </div>
+
+  <button class="mt-2 md:mt-0 px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition cursor-pointer"
+          (click)="buscar()">
+    Buscar
+  </button>
+</div>
+
+<div *ngIf="!buscado && !loading" class="text-gray-500">Selecciona un rango de fechas para ver la gráfica.</div>
+
+<div *ngIf="buscado && graficas.length === 0" class="text-gray-500">No hay registros disponibles.</div>
+
+<div *ngIf="graficas.length > 0" class="bg-white shadow rounded-xl p-4" style="height: 70vh;">
+  <canvas #chart class="w-full h-full"></canvas>
+</div>
+

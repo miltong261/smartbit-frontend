@@ -1,0 +1,96 @@
+<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+  <h3 class="text-2xl font-bold text-gray-700">Movimientos</h3>
+</div>
+
+<div class="bg-white shadow rounded-lg p-4 mb-6 flex flex-col md:flex-row md:items-end md:gap-4 gap-3">
+  <div class="flex flex-col">
+    <label class="text-sm font-medium text-gray-700 mb-1">Fondo Monetario</label>
+    <select [(ngModel)]="fondoMonetarioId" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+      <option [ngValue]="null">Todos</option>
+      <option *ngFor="let fm of fondosMonetarios" [ngValue]="fm.id">
+        {{ fm.nombre }}
+      </option>
+    </select>
+  </div>
+
+  <div class="flex flex-col">
+    <label class="text-sm font-medium text-gray-700 mb-1">Fecha Inicio</label>
+    <input type="date" [(ngModel)]="fechaInicio" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+  </div>
+
+  <div class="flex flex-col">
+    <label class="text-sm font-medium text-gray-700 mb-1">Fecha Fin</label>
+    <input type="date" [(ngModel)]="fechaFin" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+  </div>
+
+  <button
+    class="mt-2 md:mt-0 px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition cursor-pointer"
+    (click)="buscar()"
+  >
+    Buscar
+  </button>
+</div>
+
+<div *ngIf="!buscado && !loading" class="text-gray-500">Selecciona el rango de fechas para ver los movimientos.</div>
+
+<div *ngIf="buscado">
+  <div *ngIf="movimientos && movimientos.depositos">
+    <h4 class="text-xl font-semibold text-gray-700 mb-2">Depósitos</h4>
+    <div class="bg-white shadow rounded-xl overflow-hidden">
+      <table *ngIf="movimientos.depositos.length > 0" class="min-w-full table-auto border-collapse">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">#</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">Fondo Monetario</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">Fecha</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">Monto</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let d of movimientos.depositos" class="hover:bg-gray-50 transition">
+            <td class="px-6 py-4 text-sm font-medium text-gray-700">{{ d.id }}</td>
+            <td class="px-6 py-4 text-sm text-gray-600">{{ d.fondoMonetarioNombre || 'Sin nombre' }}</td>
+            <td class="px-6 py-4 text-sm text-gray-600">{{ d.fecha | date:'dd/MM/yyyy' }}</td>
+            <td class="px-6 py-4 text-sm" [ngClass]="{'text-red-500': d.monto < 0, 'text-green-600': d.monto > 0}">
+              Q {{ d.monto | number:'1.2-2' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="movimientos.depositos.length === 0" class="p-4 text-gray-500">
+        No hay depósitos disponibles
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="movimientos && movimientos.gastos">
+    <h4 class="text-xl font-semibold text-gray-700 mb-2">Gastos</h4>
+    <div class="bg-white shadow rounded-xl overflow-hidden">
+      <table *ngIf="movimientos.gastos.length > 0" class="min-w-full table-auto border-collapse">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">#</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">Fondo Monetario</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">Fecha</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">Nombre Comercio</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">Monto</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let g of movimientos.gastos" class="hover:bg-gray-50 transition">
+            <td class="px-6 py-4 text-sm font-medium text-gray-700">{{ g.id }}</td>
+            <td class="px-6 py-4 text-sm text-gray-600">{{ g.fondoMonetarioNombre || 'Sin nombre' }}</td>
+            <td class="px-6 py-4 text-sm text-gray-600">{{ g.fecha | date:'dd/MM/yyyy' }}</td>
+            <td class="px-6 py-4 text-sm text-gray-600">{{ g.nombreComercio }}</td>
+            <td class="px-6 py-4 text-sm" [ngClass]="{'text-red-500': g.total < 0, 'text-green-600': g.total > 0}">
+              Q {{ g.total | number:'1.2-2' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="movimientos.gastos.length === 0" class="p-4 text-gray-500">
+        No hay gastos disponibles
+      </div>
+    </div>
+  </div>
+</div>

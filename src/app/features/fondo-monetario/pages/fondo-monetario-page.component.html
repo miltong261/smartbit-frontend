@@ -1,0 +1,87 @@
+<div class="flex items-center justify-between mb-6">
+  <h3 class="text-2xl font-bold text-gray-700">Fondos Monetarios</h3>
+
+  <button
+    class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition cursor-pointer"
+    (click)="abrirModal()"
+  >
+    + Crear fondo monetario
+  </button>
+</div>
+
+<div class="bg-white shadow rounded-xl overflow-hidden">
+  <table *ngIf="fondosMonetarios.length > 0" class="min-w-full table-auto">
+    <thead class="bg-gray-100 text-gray-700">
+      <tr>
+        <th class="px-6 py-3 text-left text-sm font-semibold uppercase">#</th>
+        <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Nombre</th>
+        <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Tipo</th>
+        <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Saldo Inicial</th>
+        <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Saldo</th>
+        <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Estado</th>
+        <th class="px-6 py-3 text-center text-sm font-semibold uppercase">Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-gray-200">
+      <tr
+        *ngFor="let item of fondosMonetarios"
+        class="hover:bg-gray-50 transition"
+      >
+        <td class="px-6 py-4 text-sm font-medium text-gray-700">{{ item.id }}</td>
+
+        <td class="px-6 py-4 text-sm text-gray-600">{{ item.nombre }}</td>
+
+        <td class="px-6 py-4 text-sm font-semibold" [ngClass]="item.tipo === 1 ? 'text-blue-700' : 'text-purple-700'">
+          {{ item.tipo === 1 ? 'Cuenta Bancaria' : 'Caja Menuda' }}
+        </td>
+
+        <td class="px-6 py-4 text-sm text-gray-600">
+          Q {{ item.saldoInicial | number:'1.2-2' }}
+        </td>
+
+        <td class="px-6 py-4 text-sm text-gray-600" [ngClass]="{'text-red-500': item.saldoActual < 0, 'text-green-600': item.saldoActual > 0}">
+          Q {{ item.saldoActual | number:'1.2-2' }}
+        </td>
+
+
+        <td class="px-6 py-4">
+          <span
+            class="px-3 py-1 rounded-full text-xs font-semibold"
+            [ngClass]="item.activo
+              ? 'bg-green-100 text-green-700'
+              : 'bg-red-100 text-red-700'"
+          >
+            {{ item.activo ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+
+        <td class="px-6 py-4 text-center flex items-center justify-center gap-3">
+
+          <button
+            class="px-3 py-1 text-sm text-yellow-700 bg-yellow-100 rounded hover:bg-yellow-200 transition cursor-pointer"
+            (click)="abrirModal(item.id)"
+          >
+            Editar
+          </button>
+
+          <button
+            (click)="changeStatus(item.id)"
+            class="px-3 py-1 text-sm rounded transition cursor-pointer"
+            [ngClass]="
+              item.activo
+                ? 'text-red-700 bg-red-100 hover:bg-red-200'
+                : 'text-green-700 bg-green-100 hover:bg-green-200'
+            "
+          >
+            {{ item.activo ? 'Desactivar' : 'Activar' }}
+          </button>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="fondosMonetarios.length === 0" class="p-4 text-gray-500">
+    No hay fondos monetarios disponibles
+  </div>
+</div>

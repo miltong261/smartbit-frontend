@@ -1,0 +1,81 @@
+<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+  <h3 class="text-2xl font-bold text-gray-700">Presupuestos</h3>
+
+  <button
+    class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition cursor-pointer"
+    (click)="abrirModal()"
+  >
+    + Crear presupuesto
+  </button>
+</div>
+
+<div class="bg-white shadow rounded-lg p-4 mb-6 flex flex-col md:flex-row md:items-end md:gap-4 gap-3">
+  <div class="flex flex-col">
+    <label class="text-sm font-medium text-gray-700 mb-1">Tipo de gasto</label>
+    <select [(ngModel)]="tipoGastoId" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+      <option [ngValue]="null">Todos</option>
+      <option *ngFor="let tg of tipoGastos" [ngValue]="tg.id">
+        {{ tg.nombre }}
+      </option>
+    </select>
+  </div>
+
+  <div class="flex flex-col">
+    <label class="text-sm font-medium text-gray-700 mb-1">Mes</label>
+    <select [(ngModel)]="mes" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+      <option [ngValue]="null">Seleccione...</option>
+      <option *ngFor="let m of meses" [ngValue]="m.id">{{ m.nombre }}</option>
+    </select>
+  </div>
+
+  <div class="flex flex-col">
+    <label class="text-sm font-medium text-gray-700 mb-1">Año</label>
+    <select [(ngModel)]="anio" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+      <option [ngValue]="null">Seleccione...</option>
+      <option *ngFor="let a of anios" [ngValue]="a">{{ a }}</option>
+    </select>
+  </div>
+
+  <button
+    class="mt-2 md:mt-0 px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition cursor-pointer"
+    (click)="buscar()"
+  >
+    Buscar
+  </button>
+</div>
+
+<div class="bg-white shadow rounded-xl overflow-hidden">
+  <table *ngIf="presupuestos.length > 0" class="min-w-full table-auto border-collapse">
+    <thead class="bg-gray-100 text-gray-700">
+      <tr>
+        <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">#</th>
+        <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">Mes</th>
+        <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">Año</th>
+        <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">Monto</th>
+        <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wide">Tipo de gasto</th>
+        <th class="px-6 py-3 text-center text-sm font-semibold">Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-gray-200">
+      <tr *ngFor="let item of presupuestos" class="hover:bg-gray-50 transition">
+        <td class="px-6 py-4 text-sm font-medium text-gray-700">{{ item.id }}</td>
+        <td class="px-6 py-4 text-sm text-gray-600">{{ getNombreMes(item.mes) }}</td>
+        <td class="px-6 py-4 text-sm text-gray-600">{{ item.anio ?? 'Desconocido' }}</td>
+        <td class="px-6 py-4 text-sm text-green-600">Q {{ item.montoPresupuestado | number:'1.2-2' }}</td>
+        <td class="px-6 py-4 text-sm text-gray-600">{{ item.tipoGastoNombre || 'Sin nombre' }}</td>
+        <td class="px-6 py-4 text-center flex items-center justify-center gap-3">
+          <button
+            class="px-3 py-1 text-sm text-yellow-700 bg-yellow-100 rounded hover:bg-yellow-200 transition cursor-pointer"
+            (click)="abrirModal(item.id)"
+          >
+            Editar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="presupuestos.length === 0" class="p-4 text-gray-500">
+    No hay presupuestos disponibles
+  </div>
+</div>
